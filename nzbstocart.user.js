@@ -4,7 +4,7 @@
 // @description    Add posts to 'My Cart' when checkbox is clicked - browse/search list view only.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @updateURL      https://raw.github.com/dryes/nzbsdotorg_gm/nzbstocart.user.js
+// @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbstocart.user.js
 // ==/UserScript==
 //TODO: re-check all after 'Add to Cart'; shift-click fix (keyup not detected).
 //functions require stacking for Chrome JQuery support.
