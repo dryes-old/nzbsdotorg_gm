@@ -43,8 +43,7 @@ function main() {
     }
 
     function shiftClick(fromRow, toRow) {
-        for (var j = (fromRow < toRow ? fromRow + 1 : fromRow - 1); j != toRow;
-        (fromRow < toRow ? j++ : j--)) {
+        for (var j = (fromRow < toRow ? fromRow + 1 : fromRow - 1); j != toRow; (fromRow < toRow ? j++ : j--)) {
             toCart(j, false);
         }
     }
