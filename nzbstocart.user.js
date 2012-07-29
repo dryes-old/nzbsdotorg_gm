@@ -4,16 +4,17 @@
 // @description    Add posts to 'My Cart' when checkbox is clicked - browse/search list view only.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
+// @version        0002
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbstocart.user.js
 // ==/UserScript==
-//TODO: re-check all after 'Add to Cart'; shift-click fix (keyup not detected).
+//shift-click doesn't work under OSX (FF at least).
 //functions require stacking for Chrome JQuery support.
 function main() {
     var nzbtable = document.getElementById('nzbtable');
     document.getElementById('chkSelectAll').addEventListener('change', function () {
-        checkAll($('#nzbtable tbody tr th input#chkSelectAll.nzb_check_all.cartbox').is(':checked') ? true : false);
+        checkAll($('#chkSelectAll').is(':checked') ? true : false);
         toCart(0, true);
-        checkAll($('#nzbtable tbody tr th input#chkSelectAll.nzb_check_all.cartbox').is(':checked') ? false : true);
+        checkAll($('#chkSelectAll').is(':checked') ? false : true);
     }, false);
 
     lastRow = [];
@@ -35,21 +36,27 @@ function main() {
 
     function toCart(i, bool) {
         if (bool) {
-            $('#nzbtable tbody tr td.pagelinks div.nzb_multi_operations input.nzb_multi_operations_cart.submit').click();
+            $('.nzb_multi_operations_cart').click();
         } else {
-            $('#nzbtable tbody tr td.icons div.icon.icon_cart').eq((i - 2)).click();
+            $('.icon_cart').eq((i - 2)).click();
         }
     }
 
     function shiftClick(fromRow, toRow) {
-        for (var j = (fromRow < toRow ? fromRow + 1 : fromRow - 1); j != toRow; (fromRow < toRow ? j++ : j--)) {
+        for (var j = (fromRow < toRow ? fromRow + 1 : fromRow - 1); j != toRow;
+        (fromRow < toRow ? j++ : j--)) {
             toCart(j, false);
         }
     }
 
     function checkAll(bool) {
-        $('#nzbtable tbody tr th input#chkSelectAll.nzb_check_all.cartbox').prop('checked', bool);
-        $('#nzbtable tbody tr td.check input.nzb_check.cartbox').each(function () {
+        //$('input#chkSelectAll.nzb_check_all.cartbox').prop('checked', bool);
+        if (bool) {
+            $('#chkSelectAll').attr('checked', 'checked');
+        } else {
+            $('#chkSelectAll').removeAttr('checked');
+        }
+        $('.nzb_check.cartbox').each(function () {
             //$(this).prop('checked', bool);
             if (bool) {
                 $(this).attr('checked', 'checked');
@@ -60,7 +67,7 @@ function main() {
     }
 
     function setColour(nzbtable) {
-        $('#nzbtable tbody tr td.check input.nzb_check.cartbox').each(function () {
+        $('.nzb_check.cartbox').each(function () {
             $(this).parent().parent().css('background-color', ($(this).is(':checked') ? '#FFF3E2' : ''));
         });
     }
