@@ -1,4 +1,4 @@
-k// ==UserScript==
+// ==UserScript==
 // @name           NZBs(toc)ART
 // @namespace      dryes
 // @description    Add posts to 'My Cart' when checkbox is clicked - browse/search list view only.
