@@ -1,13 +1,13 @@
-// ==UserScript==
+k// ==UserScript==
 // @name           NZBs(dot)AJAX
 // @namespace      dryes
 // @description    Fancy-looking AJAX pages.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @version        0002
+// @version        0003
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbsdotajax.user.js
 // ==/UserScript==
-//TODO: match 'Jump To' links.
+//TODO: capture submits; match 'Jump To' links; improve animations.
 //functions require stacking for Chrome jQuery support.
 function main() {
     function init(bool) {
@@ -15,35 +15,30 @@ function main() {
             nzb_multi_operations_form = (isdefault ? '#nzb_multi_operations_form' : '#nzbtable'),
             nav = (isdefault ? '.nav' : '.menu'),
             navigation = (isdefault ? '#navigation' : '#user_box'),
-            main = (isdefault ? '#main' : '.content'),
-            heading = (isdefault ? '#heading' : '#header');
+            main = (isdefault ? '#main' : '.content');
 
         $('.page').each(function () {
-            $(this).bind('click', function (event) {
+            $(this).unbind('click').bind('click', function (event) {
                 doAjax(event, $(this).attr('href'), nzb_multi_operations_form);
             });
         });
 
-        $('.title, .item, .data, .movextra, ' + heading).find('a').each(function () {
-            $(this).bind('click', function (event) {
-                doAjax(event, $(this).attr('href'), main);
-            });
-        });
+	$('.title, .item, .data, .movextra, h2, .footer').find('a').unbind('click').bind('click', function (event) {
+		doAjax(event, $(this).attr('href'), main);
+	});
 
         if (!bool) {
             return;
         }
 
         location.href = location.protocol + '//' + location.hostname + '/#';
-        $(nav + ', ' + navigation).find('a').each(function () {
-            $(this).bind('click', function (event) {
+        $(nav + ', ' + navigation).find('a').unbind('click').bind('click', function (event) {
                 doAjax(event, $(this).attr('href'), main);
-            });
         });
     }
 
     function doAjax(event, url, div) {
-        if (url.match(/(?:\.jpg|(?:\/(\#[\w]+|logout|admin))$)/i)) {
+        if (url.match(/(?:\.jpg|(?:\/(\#[\w]*|logout|admin))$)/i)) {
             return;
         }
         event.preventDefault();
