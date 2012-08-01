@@ -1,4 +1,4 @@
-k// ==UserScript==
+// ==UserScript==
 // @name           NZBs(dot)AJAX
 // @namespace      dryes
 // @description    Fancy-looking AJAX pages.
