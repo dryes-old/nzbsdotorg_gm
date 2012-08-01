@@ -1,44 +1,45 @@
-// ==UserScript==
+k// ==UserScript==
 // @name           NZBs(toc)ART
 // @namespace      dryes
 // @description    Add posts to 'My Cart' when checkbox is clicked - browse/search list view only.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @version        0002
+// @version        0003
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbstocart.user.js
 // ==/UserScript==
 //shift-click doesn't work under OSX (FF at least).
-//functions require stacking for Chrome JQuery support.
+//functions require stacking for Chrome jQuery support.
 function main() {
-    var nzbtable = document.getElementById('nzbtable');
-    document.getElementById('chkSelectAll').addEventListener('change', function () {
+    var offset = ($('body').attr('class') == 'default' ? 1 : 2);
+
+    $('#chkSelectAll').bind('change', function () {
         checkAll($('#chkSelectAll').is(':checked') ? true : false);
         toCart(0, true);
         checkAll($('#chkSelectAll').is(':checked') ? false : true);
-    }, false);
+    });
 
     lastRow = [];
-    for (i = 2; i < (nzbtable.rows.length - 1); ++i) {
-        (function (i) {
-            nzbtable.rows[i].childNodes[1].addEventListener('change', function () {
-                toCart(i, false);
-                lastRow.push(i);
+    $('.nzb_check').each(function () {
+        $(this).bind('change', function () {
+            var index = ($(this).parent().parent('tr').prevAll().length - offset);
+            toCart(index, false);
+            lastRow.push(index);
+            setColour();
+        });
+        $(this).bind('keyup', function (event) {
+            var index = ($(this).parent().parent('tr').prevAll().length - offset);
+            if (event.which == 16) {
+                shiftClick(lastRow[(lastRow.length - 2)], index);
                 setColour();
-            }, false);
-            nzbtable.rows[i].childNodes[1].addEventListener('keyup', function (event) {
-                if (event.which == 16) {
-                    shiftClick(lastRow[(lastRow.length - 2)], i);
-                    setColour();
-                }
-            }, false);
-        })(i);
-    }
+            }
+        });
+    });
 
-    function toCart(i, bool) {
+    function toCart(index, bool) {
         if (bool) {
             $('.nzb_multi_operations_cart').click();
         } else {
-            $('.icon_cart').eq((i - 2)).click();
+            $('.icon_cart').eq((index)).click();
         }
     }
 
@@ -55,7 +56,7 @@ function main() {
         } else {
             $('#chkSelectAll').removeAttr('checked');
         }
-        $('.nzb_check.cartbox').each(function () {
+        $('.nzb_check').each(function () {
             //$(this).prop('checked', bool);
             if (bool) {
                 $(this).attr('checked', 'checked');
@@ -65,13 +66,12 @@ function main() {
         });
     }
 
-    function setColour(nzbtable) {
-        $('.nzb_check.cartbox').each(function () {
+    function setColour(browsetable) {
+        $('.nzb_check').each(function () {
             $(this).parent().parent().css('background-color', ($(this).is(':checked') ? '#FFF3E2' : ''));
         });
     }
 }
-
 //required for Chrome - no @require.
 function addJQuery(callback) {
     var script = document.createElement('script');
@@ -84,4 +84,4 @@ function addJQuery(callback) {
     document.body.appendChild(script);
 }
 
-document.getElementById('nzbtable') ? addJQuery(main) : null;
+(document.getElementById('browsetable') || document.getElementById('nzbtable')) ? addJQuery(main) : null;
