@@ -4,10 +4,10 @@
 // @description    Fancy-looking AJAX pages.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @version        0001
+// @version        0002
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbsdotajax.user.js
 // ==/UserScript==
-//TODO: fix tabs on /details; fix My Cart js; match 'Jump To' links.
+//TODO: match 'Jump To' links.
 //functions require stacking for Chrome jQuery support.
 function main() {
     function init(bool) {
@@ -35,7 +35,6 @@ function main() {
         }
 
         location.href = location.protocol + '//' + location.hostname + '/#';
-        window.stop();
         $(nav + ', ' + navigation).find('a').each(function () {
             $(this).bind('click', function (event) {
                 doAjax(event, $(this).attr('href'), main);
