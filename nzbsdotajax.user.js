@@ -31,7 +31,9 @@ function main() {
             return;
         }
 
-        location.href = location.protocol + '//' + location.hostname + '/#';
+	if (location.href == location.protocol + '//' + location.hostname) {
+		location.href = location.protocol + '//' + location.hostname + '/#';
+	}
         $(nav + ', ' + navigation).find('a').unbind('click').bind('click', function (event) {
                 doAjax(event, $(this).attr('href'), main);
         });
