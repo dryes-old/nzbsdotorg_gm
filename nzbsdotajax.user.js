@@ -4,7 +4,7 @@
 // @description    Fancy-looking AJAX pages.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @version        0003
+// @version        0004
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbsdotajax.user.js
 // ==/UserScript==
 //TODO: capture submits; match 'Jump To' links; improve animations.
@@ -31,7 +31,7 @@ function main() {
             return;
         }
 
-	if (location.href == location.protocol + '//' + location.hostname) {
+	if (location.href == location.protocol + '//' + location.hostname + '/') {
 		location.href = location.protocol + '//' + location.hostname + '/#';
 	}
         $(nav + ', ' + navigation).find('a').unbind('click').bind('click', function (event) {
@@ -40,7 +40,7 @@ function main() {
     }
 
     function doAjax(event, url, div) {
-        if (url.match(/(?:\.jpg|(?:\/(\#[\w]*|logout|admin))$)/i)) {
+	if (event.ctrlKey || url.match(/(?:\.jpg|(?:\/((\#[\w]*|logout)$)|(getnzb\/|admin)))/i)) {
             return;
         }
         event.preventDefault();
