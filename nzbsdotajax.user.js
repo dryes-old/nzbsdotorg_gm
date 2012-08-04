@@ -4,10 +4,10 @@
 // @description    Fancy-looking AJAX pages.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @version        0004
+// @version        0005
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbsdotajax.user.js
 // ==/UserScript==
-//TODO: capture submits; match 'Jump To' links; improve animations.
+//TODO: capture submits; match 'Jump To' links.
 //functions require stacking for Chrome jQuery support.
 function main() {
     function init(bool) {
@@ -23,24 +23,24 @@ function main() {
             });
         });
 
-	$('.title, .item, .data, .movextra, h2, .footer').find('a').unbind('click').bind('click', function (event) {
-		doAjax(event, $(this).attr('href'), main);
-	});
+        $('.title, .item, .data, .movextra, h2, .footer').find('a').unbind('click').bind('click', function (event) {
+            doAjax(event, $(this).attr('href'), main);
+        });
 
         if (!bool) {
             return;
         }
 
-	if (location.href == location.protocol + '//' + location.hostname + '/') {
-		location.href = location.protocol + '//' + location.hostname + '/#';
-	}
+        if (location.href == location.protocol + '//' + location.hostname + '/') {
+            location.href = location.protocol + '//' + location.hostname + '/#';
+        }
         $(nav + ', ' + navigation).find('a').unbind('click').bind('click', function (event) {
-                doAjax(event, $(this).attr('href'), main);
+            doAjax(event, $(this).attr('href'), main);
         });
     }
 
     function doAjax(event, url, div) {
-	if (event.ctrlKey || url.match(/(?:\.jpg|(?:\/((\#[\w]*|logout)$)|(getnzb\/|admin)))/i)) {
+        if (event.ctrlKey || url.match(/(?:\.jpg|(?:\/((\#[\w]*|logout)$)|(getnzb\/|admin)))/i)) {
             return;
         }
         event.preventDefault();
@@ -48,16 +48,23 @@ function main() {
         $.ajax({
             url: url,
             success: function (data) {
-                var rdiv = $(div),
-                    head = $('head');
+                var odiv = $(div),
+                    ndiv = $(data).find(div).eq(0);
 
-                rdiv.hide(250);
+                if (!ndiv) {
+                    return false;
+                }
+
+                odiv.fadeOut(250);
+                ndiv.attr('style', 'display: none;');
 
                 setTimeout(function () {
-                    rdiv.replaceWith($(data).find(div));
-                    $(div).show(250);
+                    odiv.replaceWith(ndiv);
+
                     //http://bugs.jquery.com/ticket/6061
-                    head.html(data.match(/(<head>[\s\S]+<\/head>)/m)[1]);
+                    $('head').html(data.match(/(<head>[\s\S]+<\/head>)/m)[1]);
+
+                    $(div).fadeIn(450);
 
                     init(false);
                 }, 250);
