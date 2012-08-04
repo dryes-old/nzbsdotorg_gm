@@ -40,7 +40,7 @@ function main() {
     }
 
     function doAjax(event, url, div) {
-        if (event.ctrlKey || url.match(/(?:\.jpg|(?:\/((\#[\w]*|logout)$)|(getnzb\/|admin)))/i)) {
+        if (event.ctrlKey || url.match(/(?:\.jpg|(?:\/(?:(?:\#[\w]*|logout)$)|(?:(?:nfo|getnzb)\/|admin)))/i)) {
             return;
         }
         event.preventDefault();
