@@ -4,10 +4,10 @@
 // @description    Fancy-looking AJAX pages.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @version        0005
+// @version        0006
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbsdotajax.user.js
 // ==/UserScript==
-//TODO: capture submits; match 'Jump To' links.
+//TODO: capture submits.
 //functions require stacking for Chrome jQuery support.
 function main() {
     function init(bool) {
@@ -17,13 +17,11 @@ function main() {
             navigation = (isdefault ? '#navigation' : '#user_box'),
             main = (isdefault ? '#main' : '.content');
 
-        $('.page').each(function () {
-            $(this).unbind('click').bind('click', function (event) {
-                doAjax(event, $(this).attr('href'), nzb_multi_operations_form);
-            });
+        $('.pager').delegate('.page', 'click', function (event) {
+            doAjax(event, $(this).attr('href'), nzb_multi_operations_form);
         });
 
-        $('.title, .item, .data, .movextra, h2, .footer').find('a').unbind('click').bind('click', function (event) {
+        $('h1, ' + main).delegate('a', 'click', function (event) {
             doAjax(event, $(this).attr('href'), main);
         });
 
@@ -34,13 +32,13 @@ function main() {
         if (location.href == location.protocol + '//' + location.hostname + '/') {
             location.href = location.protocol + '//' + location.hostname + '/#';
         }
-        $(nav + ', ' + navigation).find('a').unbind('click').bind('click', function (event) {
+        $(nav + ', ' + navigation).delegate('a', 'click', function (event) {
             doAjax(event, $(this).attr('href'), main);
         });
     }
 
     function doAjax(event, url, div) {
-        if (event.ctrlKey || url.match(/(?:\.jpg|(?:\/(?:(?:\#[\w]*|logout)$)|(?:(?:nfo|getnzb)\/|admin)))/i)) {
+        if (event.ctrlKey || url.match(/(?:\#|\.jpg)|(?:\/(?:(?:\?|logout)$)|(?:(?:nfo|getnzb)\/|derefer\.me|admin))/i)) {
             return;
         }
         event.preventDefault();
