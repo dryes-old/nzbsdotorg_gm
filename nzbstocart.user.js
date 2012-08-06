@@ -4,7 +4,7 @@
 // @description    Add posts to 'My Cart' when checkbox is clicked - browse/search list view only.
 // @include        http*://www.nzbs.org/*
 // @include        http*://nzbs.org/*
-// @version        0003
+// @version        0004
 // @updateURL      https://github.com/dryes/nzbsdotorg_gm/raw/master/nzbstocart.user.js
 // ==/UserScript==
 //shift-click doesn't work under OSX (FF at least).
@@ -12,34 +12,33 @@
 function main() {
     var offset = ($('body').attr('class') == 'default' ? 1 : 2);
 
-    $('#chkSelectAll').bind('change', function () {
+    $('#chkSelectAll').bind('click', function () {
         checkAll($('#chkSelectAll').is(':checked') ? true : false);
         toCart(0, true);
         checkAll($('#chkSelectAll').is(':checked') ? false : true);
+	setColour();
     });
 
     lastRow = [];
-    $('.nzb_check').each(function () {
-        $(this).bind('change', function () {
-            var index = ($(this).parent().parent('tr').prevAll().length - offset);
+    $('tbody').delegate('.nzb_check', 'click keyup', function (event) {
+        var index = ($(this).parent().parent('tr').prevAll().length - offset);
+
+        if (event.type == 'click') {
             toCart(index, false);
             lastRow.push(index);
-            setColour();
-        });
-        $(this).bind('keyup', function (event) {
-            var index = ($(this).parent().parent('tr').prevAll().length - offset);
+        } else {
             if (event.which == 16) {
                 shiftClick(lastRow[(lastRow.length - 2)], index);
-                setColour();
             }
-        });
+        }
+        setColour();
     });
 
     function toCart(index, bool) {
         if (bool) {
             $('.nzb_multi_operations_cart').click();
         } else {
-            $('.icon_cart').eq((index)).click();
+            $('.icon_cart').eq(index).click();
         }
     }
 
@@ -66,12 +65,13 @@ function main() {
         });
     }
 
-    function setColour(browsetable) {
+    function setColour() {
         $('.nzb_check').each(function () {
             $(this).parent().parent().css('background-color', ($(this).is(':checked') ? '#FFF3E2' : ''));
         });
     }
 }
+
 //required for Chrome - no @require.
 function addJQuery(callback) {
     var script = document.createElement('script');
