@@ -22,7 +22,7 @@ function main() {
             comments = Number(rights.eq(3).children('a').text().replace(/ cmts$/, '')),
             title = $(this).children('.title').children('b');
 
-        if (completion <= 95 || completion >= 105 || completion == 100) {
+        if (completion <= 95 || completion >= 105) {
             completiontext.attr('style', 'color: #FF6666;');
         }
 
