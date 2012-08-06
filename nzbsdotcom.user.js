@@ -17,13 +17,13 @@ function main() {
         }
 
         var rights = $(this).find('.right'),
-            completioncell = rights.eq(1).children('small'),
-            completion = Number(completioncell.text().replace(/\%$/, '')),
+            completiontext = rights.eq(1).children('small'),
+            completion = Number(completiontext.text().replace(/\%$/, '')),
             comments = Number(rights.eq(3).children('a').text().replace(/ cmts$/, '')),
             title = $(this).children('.title').children('b');
 
         if (completion <= 95 || completion >= 105 || completion == 100) {
-            completioncell.attr('style', 'color: #FF6666;');
+            completiontext.attr('style', 'color: #FF6666;');
         }
 
         if (comments > 0) {
