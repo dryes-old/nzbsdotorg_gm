@@ -12,17 +12,17 @@ $ = unsafeWindow.$;
 function main() {
     $('tr').each(function () {
         var index = $(this).prevAll().length;
-        if (index < 2 || index == $(this).parent().length) {
+        if (index < 2 || index == $(this).parent().children().length) {
             return;
         }
 
         var rights = $(this).find('.right'),
-            completioncell = rights.eq(1).find('small'),
+            completioncell = rights.eq(1).children('small'),
             completion = Number(completioncell.text().replace(/\%$/, '')),
-            comments = Number(rights.eq(3).find('a').text().replace(/ cmts$/, '')),
+            comments = Number(rights.eq(3).children('a').text().replace(/ cmts$/, '')),
             title = $(this).children('.title').children('b');
 
-        if (completion <= 95 || completion >= 105) {
+        if (completion <= 95 || completion >= 105 || completion == 100) {
             completioncell.attr('style', 'color: #FF6666;');
         }
 
